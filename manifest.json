@@ -1,0 +1,66 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/unified-manifest/v1/officeAddinUnifiedManifestSchema.json",
+  "id": "3c0f7d0e-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+  "version": "1.0.0.0",
+  "provider": { "name": "ITSL" },
+  "name": { "default": "Nextcloud Talk for Outlook" },
+  "description": { "default": "Skapar och infogar Nextcloud Talk‑möteslänkar." },
+
+  "hosts": [ "Outlook" ],
+
+  "authorization": {
+    "permissions": {
+      "resourceSpecific": [
+        { "name": "MailboxItem.ReadWrite.User", "type": "Delegated" }  // krävs för body‑ändring
+      ]
+    }
+  },
+
+  "validDomains": [
+    "https://demo.hubs.se",
+    "https://itsl.github.io"        // byt till den domän där du hostar webbfilerna
+  ],
+
+  "extensions": {
+    "runtimes": [
+      {
+        "id": "nextcloud_talk_runtime",
+        "requirements": { "capabilities":[{ "name": "Mailbox", "minVersion": "1.3"}]},
+        "code": { "page": "https://itsl.github.io/nextcloud-talk-addin/commands.html" },
+        "lifetime": "short",
+        "actions": [
+          { "id": "createTalkMeeting", "type": "executeFunction", "displayName": "createTalkMeeting"},
+          { "id": "insertTalkLink",   "type": "executeFunction", "displayName": "insertTalkLink"}
+        ]
+      }
+    ],
+
+    "ribbons": [
+      {
+        "requirements": { "capabilities":[{ "name": "Mailbox", "minVersion": "1.3"}], "formFactors":["desktop","mobile"]},
+        "contexts": ["meetingDetailsOrganizer","onlineMeetingDetailsOrganizer"],
+        "tabs":[
+          {
+            "builtInTabId": "TabDefault",
+            "groups": [
+              {
+                "id": "talkGroup",
+                "label": "Nextcloud Talk",
+                "controls":[
+                  { "id":"btnCreate", "type":"button", "label":"Boka Talkmöte",
+                    "icons":[{"size":16,"url":"icon‑16.png"}],
+                    "actionId":"createTalkMeeting"
+                  },
+                  { "id":"btnInsert", "type":"button", "label":"Lägg till Talk‑länk",
+                    "icons":[{"size":16,"url":"icon‑16.png"}],
+                    "actionId":"insertTalkLink"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
